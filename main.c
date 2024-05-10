@@ -1,33 +1,29 @@
 #include <stdio.h>
+#include <string.h>
 
-// Função para solicitar elementos e calcular a soma
-void somaDosElementos(int array[], int tamanho) {
-    int soma = 0;
-
-    // Solicita ao usuário inserir os elementos do array
-    printf("Insira os elementos do array:\n");
-    for (int i = 0; i < tamanho; i++) {
-        printf("Elemento %d: ", i + 1);
-        scanf("%d", &array[i]);
-        soma += array[i];
+int contar_vogais(char *string) {
+    int contador = 0;
+    for (int i = 0; string[i] != '\0'; i++) {
+        // Converte para minúscula para simplificar a verificação
+        char caractere = tolower(string[i]);
+        if (caractere == 'a' || caractere == 'e' || caractere == 'i' || caractere == 'o' || caractere == 'u') {
+            contador++;
+        }
     }
-
-    // Imprime a soma dos elementos
-    printf("A soma dos elementos do array é: %d\n", soma);
+    return contador;
 }
 
 int main() {
-    int tamanho;
+    char entrada[100];
+    printf("Digite uma frase ou palavra: ");
+    fgets(entrada, 100, stdin);
 
-    // Solicita ao usuário inserir o tamanho do array
-    printf("Digite o tamanho do array: ");
-    scanf("%d", &tamanho);
+    // Remove o caractere de nova linha (\n) do final da string
+    entrada[strcspn(entrada, "\n")] = '\0';
 
-    // Declara um array com o tamanho especificado
-    int array[tamanho];
+    int numero_de_vogais = contar_vogais(entrada);
 
-    // Chama a função para calcular a soma dos elementos
-    somaDosElementos(array, tamanho);
+    printf("Número de vogais na string inserida: %d\n", numero_de_vogais);
 
     return 0;
 }
