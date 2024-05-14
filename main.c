@@ -1,29 +1,47 @@
 #include <stdio.h>
-#include <string.h>
 
-int contar_vogais(char *string) {
-    int contador = 0;
-    for (int i = 0; string[i] != '\0'; i++) {
-        // Converte para minúscula para simplificar a verificação
-        char caractere = tolower(string[i]);
-        if (caractere == 'a' || caractere == 'e' || caractere == 'i' || caractere == 'o' || caractere == 'u') {
-            contador++;
-        }
-    }
-    return contador;
+// Definindo a estrutura Produto
+struct Produto {
+    char nome[50];
+    float preco;
+    int quantidade;
+};
+
+// Função para calcular o valor total em estoque de um produto
+float calcularValorTotal(struct Produto p) {
+    return p.preco * p.quantidade;
 }
 
 int main() {
-    char entrada[100];
-    printf("Digite uma frase ou palavra: ");
-    fgets(entrada, 100, stdin);
+    // Definindo um array de Produtos para armazenar múltiplos produtos
+    struct Produto produtos[50];
+    int numProdutos = 0;
+    char continuar;
 
-    // Remove o caractere de nova linha (\n) do final da string
-    entrada[strcspn(entrada, "\n")] = '\0';
+    do {
+        // Pedindo ao usuário para inserir os detalhes do produto
+        printf("Digite o nome do produto: ");
+        scanf("%s", produtos[numProdutos].nome);
 
-    int numero_de_vogais = contar_vogais(entrada);
+        printf("Digite o preço do produto: ");
+        scanf("%f", &produtos[numProdutos].preco);
 
-    printf("Número de vogais na string inserida: %d\n", numero_de_vogais);
+        printf("Digite a quantidade em estoque: ");
+        scanf("%d", &produtos[numProdutos].quantidade);
+
+        numProdutos++; // Incrementando o contador de produtos
+
+        // Perguntando se o usuário deseja continuar cadastrando produtos
+        printf("Deseja cadastrar outro produto? (S/N): ");
+        scanf(" %c", &continuar);
+    } while (continuar == 'S' || continuar == 's');
+
+    // Exibindo os produtos cadastrados e o valor total em estoque
+    printf("\nProdutos cadastrados:\n");
+    printf("Nome\t\tPreço\t\tQuantidade\tValor Total\n");
+    for (int i = 0; i < numProdutos; i++) {
+        printf("%s\t\t%.2f\t\t%d\t\t%.2f\n", produtos[i].nome, produtos[i].preco, produtos[i].quantidade, calcularValorTotal(produtos[i]));
+    }
 
     return 0;
 }
