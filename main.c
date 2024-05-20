@@ -1,70 +1,77 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Função para inverter um array usando ponteiros
-int* inverterArray(int *array, int tamanho) {
-    int *arrayInvertido = malloc(tamanho * sizeof(int)); // Aloca memória para o novo array invertido
-
-    if (arrayInvertido == NULL) {
-        printf("Erro ao alocar memoria.\n");
-        exit(1);
-    }
-
-    int *ptrOriginal = array + tamanho - 1; // Ponteiro para o último elemento do array original
-    int *ptrInvertido = arrayInvertido; // Ponteiro para o primeiro elemento do array invertido
-
-    // Copia os elementos do array original para o novo array invertido, em ordem inversa
-    for (int i = 0; i < tamanho; i++) {
-        *ptrInvertido = *ptrOriginal; // Copia o valor apontado pelo ponteiro original para o ponteiro invertido
-        ptrOriginal--; // Move o ponteiro original para o elemento anterior
-        ptrInvertido++; // Move o ponteiro invertido para o próximo elemento
-    }
-
-    return arrayInvertido; // Retorna o novo array invertido
+// Função para comparar dois inteiros para qsort
+int compare(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
 }
 
-// Função para imprimir um array
-void imprimirArray(int *array, int tamanho) {
-    printf("[ ");
-    for (int i = 0; i < tamanho; i++) {
-        printf("%d ", array[i]);
+// Função para calcular a média
+double calcularMedia(int arr[], int n) {
+    double soma = 0;
+    for (int i = 0; i < n; i++) {
+        soma += arr[i];
     }
-    printf("]\n");
+    return soma / n;
+}
+
+// Função para calcular a mediana
+double calcularMediana(int arr[], int n) {
+    // Ordena o array
+    qsort(arr, n, sizeof(int), compare);
+
+    if (n % 2 == 0) {
+        // Se o número de elementos for par, a mediana é a média dos dois elementos do meio
+        return (arr[n / 2 - 1] + arr[n / 2]) / 2.0;
+    } else {
+        // Se o número de elementos for ímpar, a mediana é o elemento do meio
+        return arr[n / 2];
+    }
+}
+
+// Função para calcular a moda
+int calcularModa(int arr[], int n) {
+    int maxCount = 0, moda = arr[0], count = 1;
+
+    // Ordena o array
+    qsort(arr, n, sizeof(int), compare);
+
+    for (int i = 1; i < n; i++) {
+        if (arr[i] == arr[i - 1]) {
+            count++;
+        } else {
+            count = 1;
+        }
+
+        if (count > maxCount) {
+            maxCount = count;
+            moda = arr[i];
+        }
+    }
+
+    return moda;
 }
 
 int main() {
-    int tamanho;
+    int n;
 
-    // Pedir ao usuário o tamanho do array
-    printf("Digite o tamanho do array: ");
-    scanf("%d", &tamanho);
+    printf("Digite o número de elementos do array: ");
+    scanf("%d", &n);
 
-    // Alocar memória para o array
-    int *array = malloc(tamanho * sizeof(int));
-    if (array == NULL) {
-        printf("Erro ao alocar memoria.\n");
-        return 1;
-    }
-
-    // Pedir ao usuário os elementos do array
+    int arr[n];
     printf("Digite os elementos do array:\n");
-    for (int i = 0; i < tamanho; i++) {
+    for (int i = 0; i < n; i++) {
         printf("Elemento %d: ", i + 1);
-        scanf("%d", &array[i]);
+        scanf("%d", &arr[i]);
     }
 
-    // Inverter o array
-    int *arrayInvertido = inverterArray(array, tamanho);
+    double media = calcularMedia(arr, n);
+    double mediana = calcularMediana(arr, n);
+    int moda = calcularModa(arr, n);
 
-    // Imprimir o array original e o array invertido
-    printf("\nArray original: ");
-    imprimirArray(array, tamanho);
-    printf("Array invertido: ");
-    imprimirArray(arrayInvertido, tamanho);
-
-    // Liberar memória alocada para os arrays
-    free(array);
-    free(arrayInvertido);
+    printf("Media: %.2f\n", media);
+    printf("Mediana: %.2f\n", mediana);
+    printf("Moda: %d\n", moda);
 
     return 0;
 }
